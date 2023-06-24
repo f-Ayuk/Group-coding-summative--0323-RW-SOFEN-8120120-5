@@ -45,6 +45,46 @@ delete_student_record_by_ID() {
     
     echo "Student with ID $student_id deleted successfully."
 }
+
+# Function to update a student record by ID
+update_student() {
+    echo "Enter student ID to update:"
+    read student_id
+    
+    # Create a temporary file for storing updated records
+    temp_file="temp.txt"
+    
+    # Search for the student record in the file
+    grep "^.*|$student_id$" "$students_file" > "$temp_file"
+    
+    if [[ ! -s "$temp_file" ]]; then
+        echo "Student with ID $student_id not found."
+        rm "$temp_file"
+        return
+    fi
+    
+    # Extract the student details from the temporary file
+    old_record=$(cat "$temp_file")
+    IFS='|' read -ra old_fields <<< "$old_record"
+    
+    echo "Enter new email (currently ${old_fields[0]}):"
+    read new_email
+    
+    echo "Enter new age (currently ${old_fields[1]}):"
+    read new_age
+    
+    # Create a new student record with updated fields
+    new_record="$new_email|$new_age|$student_id"
+    
+    # Replace the old student record with the updated record
+    sed -i "s~$old_record~$new_record~g" "$students_file"
+    
+    echo "Student with ID $student_id updated successfully."
+    
+    # Remove the temporary file
+    rm "$temp_file"
+}
+
 # Main menu loop
 while true; do
     echo "
@@ -53,6 +93,7 @@ while true; do
     1. Create student record
     2. View Student Records
     3. Delete Student Record
+    4. Update student Record
 
 Enter your choice:"
     
@@ -67,6 +108,9 @@ Enter your choice:"
 		;;
 	3)
 		delete_student_record_by_ID
+		;;
+	4)
+		update_student
 		;;
 esac
 done
