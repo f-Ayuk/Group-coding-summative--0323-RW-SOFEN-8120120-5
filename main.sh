@@ -94,6 +94,7 @@ while true; do
     2. View Student Records
     3. Delete Student Record
     4. Update student Record
+    5. Exit 
 
 Enter your choice:"
     
@@ -112,5 +113,14 @@ Enter your choice:"
 	4)
 		update_student
 		;;
+	5)
+            echo "Exiting application."
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice. Please try again."
+            ;;	
+
+
 esac
 done
